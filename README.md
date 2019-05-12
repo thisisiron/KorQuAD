@@ -1,5 +1,6 @@
 # KorQuAD
 
+cl 다운로드 방법
 ...
 
 ## Create Bundel
