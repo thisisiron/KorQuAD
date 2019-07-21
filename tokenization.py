@@ -24,6 +24,8 @@ import unicodedata
 import six
 import tensorflow as tf
 
+from konlpy.tag import Mecab
+
 
 def validate_case_matches_checkpoint(do_lower_case, init_checkpoint):
   """Checks whether the casing config is consistent with the checkpoint name."""
@@ -166,13 +168,15 @@ class FullTokenizer(object):
     self.inv_vocab = {v: k for k, v in self.vocab.items()}
     self.basic_tokenizer = BasicTokenizer(do_lower_case=do_lower_case)
     self.wordpiece_tokenizer = WordpieceTokenizer(vocab=self.vocab)
+    self.mecab_tokenizer = Mecab('../mecab-ko-dic-2.1.1-20180720')
 
   def tokenize(self, text):
     split_tokens = []
-    for token in self.basic_tokenizer.tokenize(text):
-      for sub_token in self.wordpiece_tokenizer.tokenize(token):
-        split_tokens.append(sub_token)
-
+    # for token in self.basic_tokenizer.tokenize(text):
+    #   for sub_token in self.wordpiece_tokenizer.tokenize(token):
+    #     split_tokens.append(sub_token)
+    for token in self.mecab_tokenizer.morphs(text):
+      split_tokens.append(token)
     return split_tokens
 
   def convert_tokens_to_ids(self, tokens):
